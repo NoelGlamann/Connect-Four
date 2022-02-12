@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ConsoleInterface {
-    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    private BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
     public void displayMainMenu(){
         System.out.println("\n\nHow would you like to play?\r\n" +
@@ -52,7 +52,7 @@ public class ConsoleInterface {
         } while (true);
         return input;
     }
-    private static void loopByRow(Piece[][] board){
+    private void loopByRow(Piece[][] board){
         for(Piece[] row: board){
             int columnIndex = 0;
             int numberPlace = 1;
