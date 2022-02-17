@@ -77,6 +77,7 @@ public class GameController {
     }
     private void playGame(Player p1, Player p2, boolean timer) throws IOException, InterruptedException {
         boolean win = false;
+        boolean tie = false;
         boolean player1Turn = true;
         int columnSelect;
         while (!win){
@@ -97,15 +98,27 @@ public class GameController {
                 playPiece(p2, columnSelect);
                 win = board.checkForWin(p2.getMyColor(), columnSelect);
             }
+            tie = board.checkForTie(board.boardArray);
+            if(tie){
+                win = true;
+            }
         }
-        ci.displayBoard(board.boardArray);
-        if(!player1Turn){
-            ci.displayWin(p1);
+        if(!tie) {
+            ci.displayBoard(board.boardArray);
+            if (!player1Turn) {
+                ci.displayWin(p1);
+            } else {
+                ci.displayWin(p2);
+            }
+            System.out.println(Console.RESET);
+            Thread.sleep(1500);
         }else{
-            ci.displayWin(p2);
+            System.out.println();
+            System.out.println();
+            System.out.println("IT'S A TIE");
+            System.out.println();
+            System.out.println();
         }
-        System.out.println(Console.RESET);
-        Thread.sleep(1500);
     }
     private int getColumn(Player p) throws IOException {
         int chosenColumn;
@@ -121,16 +134,6 @@ public class GameController {
         while(!done){
             boolean columnAvailable = board.columnAvailable(column);
             if (!columnAvailable){
-                boolean allFull = true;
-                for (Piece piece: board.boardArray[0]){
-                    if (piece == Piece.e){
-                        allFull = false;
-                    }
-                }
-                if (allFull){
-                    System.out.println("It's a tie!");
-                    break;
-                }
                 System.out.println("Please select another column: ");
                 column = getColumn(p);
             }else{

@@ -56,7 +56,15 @@ public class Board {
         }
         return won;
     }
-
+    public boolean checkForTie(Piece[][] b){
+        boolean tie = true;
+        for (Piece p: b[0]){
+            if (p == Piece.e){
+                tie = false;
+            }
+        }
+        return tie;
+    }
     public boolean checkVertical(Piece color, int column){
         boolean won = false;
         int count = 0;
