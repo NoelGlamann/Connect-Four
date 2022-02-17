@@ -19,13 +19,13 @@ public class GameController {
             int selection = ci.getUserInputAsInt(1,4);
             switch (selection) {
                 case 1 -> {
-                    playerSetUp(true, true);
+                    playerSetUp(true, true, false);
                 }
                 case 2 -> {
-                    playerSetUp(true, false);
+                    playerSetUp(true, false, false);
                 }
                 case 3 -> {
-                    playerSetUp(false, false);
+                    playerSetUp(false, false, true);
                 }
                 case 4 -> {
                     return;
@@ -35,7 +35,7 @@ public class GameController {
         }
     }
 
-    private void playerSetUp(boolean p1IsHuman, boolean p2IsHuman) throws IOException, InterruptedException {
+    private void playerSetUp(boolean p1IsHuman, boolean p2IsHuman, boolean timer) throws IOException, InterruptedException {
         if (p1IsHuman){
             String pAName = ci.getHumanName();
             Player pA = new Human(pAName, true);
@@ -55,9 +55,9 @@ public class GameController {
             Player pB = new Computer("Computer", false);
             players.add(pB);
         }
-        playerOrder();
+        playerOrder(timer);
     }
-    private void playerOrder() throws InterruptedException, IOException {
+    private void playerOrder(boolean timer) throws InterruptedException, IOException {
         System.out.print("Player one will be chosen randomly.");
         for (int i = 0; i < 3; i++) {
             Thread.sleep(1000);
@@ -73,13 +73,16 @@ public class GameController {
         players.get(player2).setPlayerOrder(2);
         players.get(player2).setMyColor(Piece.r);
 
-        playGame(players.get(player1), players.get(player2));
+        playGame(players.get(player1), players.get(player2), timer);
     }
-    private void playGame(Player p1, Player p2) throws IOException, InterruptedException {
+    private void playGame(Player p1, Player p2, boolean timer) throws IOException, InterruptedException {
         boolean win = false;
         boolean player1Turn = true;
         int columnSelect;
         while (!win){
+            if (timer) {
+                Thread.sleep(1000);
+            }
             ci.displayBoard(board.boardArray);
             if (player1Turn){
                 player1Turn = false;
@@ -93,9 +96,6 @@ public class GameController {
                 columnSelect = getColumn(p2);
                 playPiece(p2, columnSelect);
                 win = board.checkForWin(p2.getMyColor(), columnSelect);
-            }
-            if(!p2.isHuman()){
-                Thread.sleep(1000);
             }
         }
         ci.displayBoard(board.boardArray);
@@ -112,7 +112,7 @@ public class GameController {
         if (p.isHuman()){
             chosenColumn = ci.getUserInputAsInt(1,7);
         } else{
-            chosenColumn = r.nextInt(1,7);
+            chosenColumn = r.nextInt(1,8);
         }
         return chosenColumn;
     }
@@ -121,7 +121,17 @@ public class GameController {
         while(!done){
             boolean columnAvailable = board.columnAvailable(column);
             if (!columnAvailable){
-                System.out.print("Please select another column: ");
+                boolean allFull = true;
+                for (Piece piece: board.boardArray[0]){
+                    if (piece == Piece.e){
+                        allFull = false;
+                    }
+                }
+                if (allFull){
+                    System.out.println("It's a tie!");
+                    break;
+                }
+                System.out.println("Please select another column: ");
                 column = getColumn(p);
             }else{
                 int row = board.rowAvailable(column);
