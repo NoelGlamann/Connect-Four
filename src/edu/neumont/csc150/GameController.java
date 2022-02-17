@@ -13,6 +13,7 @@ public class GameController {
 
     public void run() throws IOException, InterruptedException {
         while(true){
+            board.boardArray = board.resetBoard();
             ci.displayMainMenu();
             int selection = ci.getUserInputAsInt(1,4);
             switch (selection) {
@@ -77,20 +78,20 @@ public class GameController {
         boolean win = false;
         boolean player1Turn = true;
         int columnSelect;
-        ci.displayBoard(board.boardArray);
         while (!win){
+            ci.displayBoard(board.boardArray);
             if (player1Turn){
                 player1Turn = false;
                 ci.displayPlayerTurn(p1);
                 columnSelect = getColumn(p1);
                 playPiece(p1, columnSelect);
-                win = board.checkForWin(p1.getMyColor());
+                win = board.checkForWin(p1.getMyColor(), columnSelect);
             }else{
                 player1Turn = true;
                 ci.displayPlayerTurn(p2);
                 columnSelect = getColumn(p2);
                 playPiece(p2, columnSelect);
-                win = board.checkForWin(p2.getMyColor());
+                win = board.checkForWin(p2.getMyColor(), columnSelect);
             }
             ci.displayBoard(board.boardArray);
             if(!p2.isHuman()){

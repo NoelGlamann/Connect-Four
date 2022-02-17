@@ -10,6 +10,19 @@ public class Board {
             {Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e},
             {Piece.n, Piece.n, Piece.n, Piece.n, Piece.n, Piece.n, Piece.n},
     };
+
+    public Piece[][] resetBoard(){
+        Piece[][] boardArray = {
+                {Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e},
+                {Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e},
+                {Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e},
+                {Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e},
+                {Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e},
+                {Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e, Piece.e},
+                {Piece.n, Piece.n, Piece.n, Piece.n, Piece.n, Piece.n, Piece.n},
+        };
+        return boardArray;
+    }
     public boolean columnAvailable(int column){
         boolean available = false;
         if (boardArray[0][column-1] == Piece.e){
@@ -33,8 +46,8 @@ public class Board {
         boardArray[row-1][column-1] = pieceColor;
     }
 
-    public boolean checkForWin(Piece color){
-        boolean won = checkVertical(color);
+    public boolean checkForWin(Piece color, int column){
+        boolean won = checkVertical(color, column);
         if(!won){
             won = checkHorizontal(color);
         }
@@ -44,22 +57,17 @@ public class Board {
         return won;
     }
 
-    public boolean checkVertical(Piece color){
+    public boolean checkVertical(Piece color, int column){
         boolean won = false;
-        for(Piece[] row: boardArray) {
-            int count = 0;
-            for (Piece p : row) {
-                boolean looping = true;
-                if (p == color){
-                    Piece[] rowNum = row;
-                   while (looping){
-                       count++;
-                       if (boardArray[rowNum][p]){
-
-                       }
-                   }
-
+        int count = 0;
+        for(int row = 0; row < boardArray.length; row++){
+            if (boardArray[row][column-1] == color){
+                count++;
+                if (count==4){
+                    won = true;
                 }
+            }else{
+                count = 0;
             }
         }
         return won;
